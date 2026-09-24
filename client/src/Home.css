@@ -1,0 +1,212 @@
+body {
+    margin: 0;
+    background-color: #003F56;
+}
+
+.site-header {
+    height: 60px;
+    padding: 0 10px;
+    background-color: #003F56;
+}
+
+.site-footer {
+    height: 250px;
+    border: 1px solid #ddd;
+    padding: 65px 181px 65px 181px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.home-layout {
+    display: grid;
+    grid-template-columns: 240px 1fr 240px;
+}
+
+.home-center {
+    padding: 10px 0px;
+}
+
+.home-left {
+    padding: 10px;
+}
+
+.home-right {
+    padding: 10px;
+}
+
+.home-category {
+    background-color: #002C3C;
+    padding: 13px 14px 50px;
+    position: sticky;
+    top: 10px;
+}
+
+.home-right-wrapper {
+    position: sticky;
+    top: 10px;
+}
+
+.home-login {
+    background-color: #002C3C;
+    padding: 13px 14px;
+}
+
+.home-docs {
+    background-color: #002C3C;
+    margin-top: 10px;
+    padding: 13px 14px;
+}
+
+.home-hero {
+    background-color: #002C3C;
+    border: 1px solid #FF94C9;
+    height: 300px;
+    padding: 10px;
+    display: grid;
+    align-content: center;
+}
+
+.home-hero-text {
+    color: #FF94C9;
+    font-size: 24px;
+    margin: 0;
+}
+
+.home-footer-text {
+    color: white;
+    font-size: 20px;
+    margin: 0;
+}
+
+.home-panel-title {
+    color: #F3FF94;
+    margin: 0;
+}
+
+.home-standalone {
+    margin-top: 30px;
+    color: #FF94C9;
+}
+
+.home-ul {
+    padding: 0;
+    list-style: none;
+    margin: 0;
+}
+
+.home-ul a {
+    color: #FF94C9;
+    text-decoration: none;
+}
+
+.home-ul a:hover {
+    color: white;
+}
+
+.home-ul a::before {
+    content: "> ";
+}
+
+.home-ul-login {
+    color: #FF94C9;
+    padding: 0;
+    list-style: none;
+    margin: 0;
+}
+
+.home-ul-login a {
+    color: #FF94C9;
+    text-decoration: none;
+}
+
+.home-ul-login a:hover {
+    color: white;
+}
+
+.home-search-area {
+    background-color: #002C3C;
+    border-top: 10px solid #003F56;
+    height: 120px;
+    padding: 14px 12px;
+    position: sticky;
+    top: 0px;
+    z-index: 20;
+}
+
+.home-search-input {
+    width: 100%;
+    font-size: 20px;
+    padding: 10px;
+}
+
+.home-category-dropdown {
+    width: 200px;
+    background-color: #002C3C;
+    position: absolute;
+    z-index: 10;
+    border: 1px solid #FF94C9;
+    margin-top: 10px;
+}
+
+.home-category-dropdown-btn {
+    border: none;
+    background: none;
+    padding: 0;
+    color: #FF94C9;
+    font: inherit;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: normal;
+}
+
+.home-category-dropdown-btn:hover {
+    color: white;
+}
+
+.home-category-dropdown .home-category-dropdown-btn::before { /* 자손선택자 .a .b = .a안에 있는 .b만 골라냄 (공백이 '안에 있는' 이라는 의미) */
+    content: "> ";
+}
+
+.home-card {
+    position: relative;
+    transition: transform 0.2s;
+    width: 250px;
+}
+
+.home-card:hover {
+    transform: scale(1.05);
+}
+
+.home-card-text-area {
+    position: absolute;
+    bottom: 35px;
+    left: 80px;
+    width: 110px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    padding: 0;
+}
+
+.home-card-text {
+    margin: 0;
+    color: #F3FF94;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+}
+
+.home-assets-area {
+    margin-top: 50px;
+}
+
+.home-assets-ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0;
+    gap: 70px 30px;
+}

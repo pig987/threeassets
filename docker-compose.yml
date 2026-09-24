@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5433:5432" # 싸가지없게 컴퓨터의 5432포트 가져감
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./01-schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./02-seed.sql:/docker-entrypoint-initdb.d/02-seed.sql
+
+volumes:
+  pgdata:
