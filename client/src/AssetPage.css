@@ -1,0 +1,26 @@
+.asset-preset-area {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    width: 120px;
+    border: 0px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+}
+
+.asset-preset {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: black;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.asset-preset:hover {
+    transform: scale(1.05);
+}

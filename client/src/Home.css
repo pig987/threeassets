@@ -1,15 +1,18 @@
 body {
     margin: 0;
+}
+
+.home {
     background-color: #003F56;
 }
 
-.site-header {
+.home-header {
     height: 60px;
     padding: 0 10px;
     background-color: #003F56;
 }
 
-.site-footer {
+.home-footer {
     height: 250px;
     border: 1px solid #ddd;
     padding: 65px 181px 65px 181px;
@@ -37,7 +40,7 @@ body {
 
 .home-category {
     background-color: #002C3C;
-    padding: 13px 14px 50px;
+    padding: 13px 14px 30px;
     position: sticky;
     top: 10px;
 }
@@ -85,26 +88,29 @@ body {
 }
 
 .home-standalone {
-    margin-top: 30px;
+    margin-top: 10px;
     color: #FF94C9;
 }
 
-.home-ul {
+.home-li {
     padding: 0;
     list-style: none;
     margin: 0;
 }
 
-.home-ul a {
-    color: #FF94C9;
+.home-li a,
+.home-li-item {
+    color: inherit;
     text-decoration: none;
 }
 
-.home-ul a:hover {
+.home-li a:hover,
+.home-li-item:hover {
     color: white;
 }
 
-.home-ul a::before {
+.home-li a::before,
+.home-li-item::before {
     content: "> ";
 }
 
@@ -141,7 +147,7 @@ body {
 }
 
 .home-category-dropdown {
-    width: 200px;
+    width: 180px;
     background-color: #002C3C;
     position: absolute;
     z-index: 10;
@@ -162,10 +168,6 @@ body {
 
 .home-category-dropdown-btn:hover {
     color: white;
-}
-
-.home-category-dropdown .home-category-dropdown-btn::before { /* 자손선택자 .a .b = .a안에 있는 .b만 골라냄 (공백이 '안에 있는' 이라는 의미) */
-    content: "> ";
 }
 
 .home-card {

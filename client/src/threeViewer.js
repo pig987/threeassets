@@ -29,18 +29,19 @@ export function initViewer(container, url){
     camera.position.set(2,0,7);
     camera.lookAt(0,0,0);
 
+    let variants = [];
+
     let model;
     const loader = new GLTFLoader();
     loader.load(url,
         (gltf) => {
             model = gltf.scene;
-            model.traverse((child) => {
-                if (child.isMesh) child.material = material;
-            });
             const box = new THREE.Box3().setFromObject(model);
             const center = box.getCenter(new THREE.Vector3());
             model.position.sub(center);
             scene.add(model);
+            variants = [...model.children].sort((x,y) => x.name.localeCompare(y.name));
+            showVariant(0);
         },
         undefined,
         (err) => console.error(err)
@@ -52,11 +53,30 @@ export function initViewer(container, url){
     }
     renderer.setAnimationLoop(animate);
 
-    return () => {
-        renderer.setAnimationLoop(null);
-        controls.dispose();
-        renderer.dispose();
-        container.removeChild(renderer.domElement);
-        console.log("dump");
+
+    function showVariant(idx) {
+        if (!model) return;
+        model.children.forEach((child) => {
+            child.visible = (child === variants[idx]);
+        });
+    }
+
+    return {
+        cleanup: () => {
+            renderer.setAnimationLoop(null);
+            controls.dispose();
+            renderer.dispose();
+            container.removeChild(renderer.domElement);
+            console.log("dump");
+        },
+        showVariant: (idx) => showVariant(idx)
     }
 }
+
+/*
+model.traverse((child) => {
+    if (child.isMesh){
+        //child.material = material;
+    } 
+}); 
+*/

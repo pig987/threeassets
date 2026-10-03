@@ -12,9 +12,12 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Home />} />
-        <Route path='/categories/:categoryId' element={<AssetList />} />
+        <Route path='/categories/:type' element={<Home />} />
+        <Route path='/categories/:type/:category' element={<Home />} />
         <Route path='/assets/:assetId' element={<AssetPage />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,
 )
+
+{/*<Route path='/categories/:categoryId' element={<AssetList />} />  */}
