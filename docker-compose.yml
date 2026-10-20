@@ -1,4 +1,17 @@
 services:
+  server:
+    build: .
+    image: fetchmesh-server # 이미지 이름 정하기
+    env_file: .env
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+    ports:
+      - "80:3000"
+    depends_on:
+      - db
+    restart: unless-stopped
+
   db:
     image: postgres:16
     environment:
@@ -6,7 +19,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
     ports:
-      - "5433:5432" # 싸가지없게 컴퓨터의 5432포트 가져감
+
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./01-schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
@@ -14,3 +27,4 @@ services:
 
 volumes:
   pgdata:
+

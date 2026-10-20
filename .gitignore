@@ -1,6 +1,6 @@
 node_modules
 .env
-client/public/glb/
-client/public/images/
+client/glb/
 dist
 server/note.md
+server/call.json

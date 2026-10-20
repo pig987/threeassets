@@ -1,7 +1,110 @@
 import pg from 'pg';
 import express from 'express';
+import { createMcpHandler, McpServer } from '@modelcontextprotocol/server';
+import { createMcpExpressApp } from '@modelcontextprotocol/express'; // 일단 안씀.
+import { toNodeHandler } from '@modelcontextprotocol/node';
+import { z } from "zod";
+import { rateLimit } from 'express-rate-limit';
+import path from 'path';
 const { Pool } = pg;
 const app = express();
+
+/** TODO
+ * R2에 헤더 'Content-Disposition', 'attachment' 
+*/
+
+app.use(express.static('../client/dist'));
+
+const limiter = rateLimit({
+    windowMs: 60 * 1000,
+    limit: 100,
+    standardHeaders: 'draft-7',
+    legacyHeaders: false,
+});
+
+const handler = createMcpHandler(() => {
+    const server = new McpServer({name: "fetchmesh", version: "1.0.0"});
+    server.registerTool("list_categories", {
+        description: "List all asset categories. Each category is either 'standalone' (single ready-to-use models) or 'modular' (kits of pieces that snap together). Call this first to find valid category names for search_assets.", 
+    },
+    async () => {
+        const result = await pool.query(`SELECT type, name FROM categories`)
+        const grouped = { standalone: [], modular: [] };
+        for (const row of result.rows){
+            grouped[row.type].push(row.name);
+        }
+        return {
+            content: [{  type: "text", text: JSON.stringify(grouped)} ]
+        };
+    });
+    
+    server.registerTool("search_assets", {
+        description: "Search lightweight GLB 3D assets for three.js. Filter by any combination of keyword, category, and type (at least one is required). Returns a list of matching assets with id and name only.",
+        inputSchema: z.object({
+            query: z.string().describe("Keyword matched against asset names (e.g. tree, robot)").optional(),
+            category: z.enum(["characters", "buildings", "props", "items", "nature", "vehicles", "fx", "terrain", "building_kits", "interiors"]).optional(),
+            type: z.enum(["standalone", "modular"]).describe("'standalone': single ready-to-use models. 'modular': pieces that snap together to build larger structures (walls, floors, terrain tiles).").optional()
+        })
+    },
+    async ({query, category, type}) => {
+        const conditions = [];
+        if (query) conditions.push(query);
+        if (category) conditions.push(category);
+        if (type) conditions.push(type);
+
+        if (conditions.length === 0){
+            return {
+                content: [{ type: "text", text: "Provide at least one of query, category, or type"}],
+                isError: true
+            };
+        }
+        let sql, params;
+        if (query){
+            if (!category && !type) {
+                sql = `SELECT id, name FROM assets WHERE name ILIKE $1`;
+                params = [`%${query}%`];
+            }
+            else if (category && !type){
+                sql = `SELECT a.id, a.name FROM assets a JOIN categories c ON a.category_id = c.id WHERE a.name ILIKE $1 AND c.name = $2`;
+                params = [`%${query}%`, category];
+            }
+            else if (!category && type){
+                sql = `SELECT a.id, a.name FROM assets a JOIN categories c ON a.category_id = c.id WHERE a.name ILIKE $1 AND c.type = $2`;
+                params = [`%${query}%`, type];
+            }
+            else if (category && type){
+                sql = `SELECT a.id, a.name FROM assets a JOIN categories c ON a.category_id = c.id WHERE a.name ILIKE $1 AND c.name = $2 AND c.type = $3`;
+                params = [`%${query}%`, category, type];
+            }
+        }
+        else {
+            if (category && !type){
+                sql = `SELECT a.id, a.name FROM assets a JOIN categories c ON a.category_id = c.id WHERE c.name = $1`;
+                params = [category];
+            }
+            else if (!category && type){
+                sql = `SELECT a.id, a.name FROM assets a JOIN categories c ON a.category_id = c.id WHERE c.type = $1`;
+                params = [type];
+            }
+            else if (category && type){
+                sql = `SELECT a.id, a.name FROM assets a JOIN categories c ON a.category_id = c.id WHERE c.name = $1 AND c.type = $2`;
+                params = [category, type];
+            }
+        }
+        const result = await pool.query(sql, params);
+        if (result.rows.length === 0) return {
+            content: [{ type: "text", text: "No assets found. Try a different query or check list_categories."}]
+        };
+
+        return {
+            content: [{ type: "text", text: JSON.stringify(result.rows) }]
+        };
+    });
+
+    return server;
+});
+
+const node = toNodeHandler(handler);
 
 const pool = new Pool({
     user: process.env.DB_USER,
@@ -11,18 +114,14 @@ const pool = new Pool({
     database: process.env.DB_NAME
 });
 
-app.use('/api/glb', express.static('../client/public/glb', {
-    setHeaders: (res) => {
-        res.setHeader('Content-Disposition', 'attachment');
-    }
-}));
+app.use(limiter); // 제한 횟수 안넘으면 next()로 아래 라우터로 내려감
 
 app.get('/api/assets/:id/download', async (req, res) => {
     try {
         const id = req.params.id;
         const result = await pool.query(`SELECT glb_url FROM assets WHERE id=$1`, [id]);
         if (!result.rows.length) return res.sendStatus(404);
-        res.redirect("/api"+result.rows[0].glb_url);
+        res.redirect(process.env.ASSET_BASE_URL + result.rows[0].glb_url);
     } catch (e) {
         console.error(e);
         res.sendStatus(500);
@@ -52,9 +151,13 @@ app.get('/api/assets/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const result = await pool.query(`SELECT * FROM assets WHERE id=$1`, [id]);
-        res.send(result.rows[0]);
+        const asset = result.rows[0];
+        if (!asset) return res.sendStatus(404);
+        asset.glb_url = process.env.ASSET_BASE_URL + asset.glb_url;
+        res.send(asset);
     } catch (e) {
         res.sendStatus(500);
+        console.error(e);
     }
 });
 
@@ -113,22 +216,17 @@ app.get('/api/assets', async (req, res) => {
     }
 });
 
-/*app.get('/api/assets', async (req, res) => {
-    try {
-        const categoryId = req.query.category;
-        if (categoryId){
-            const result = await pool.query(`SELECT * FROM assets WHERE category_id=$1`, [categoryId]);
-            res.send(result.rows);
-        } else { // ?category 안넣으면 전체 목록 볼수있게 (나중에 화면에 구현)
-            const result = await pool.query(`SELECT * FROM assets ORDER BY id`);
-            res.send(result.rows);
-        }
-    } catch (e) {
-        res.sendStatus(500);
-    }
-});*/
+app.all('/mcp', express.json(), (req, res) => {
+    node(req, res, req.body);
+});
 
+app.use('/api', (req, res) => { // React Router 깨우기
+    res.sendStatus(404);
+});
 
+app.use((req, res) => {
+    res.sendFile(path.resolve('../client/dist/index.html'));
+});
 
 app.listen(3000, () => {
     console.log('서버 실행 중: http://localhost:3000');
