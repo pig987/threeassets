@@ -13,6 +13,7 @@ const app = express();
  * R2에 헤더 'Content-Disposition', 'attachment' 
 */
 
+app.use('/static', express.static('../client/dist/static', { maxAge: '1y', immutable: true }));
 app.use(express.static('../client/dist'));
 
 const limiter = rateLimit({

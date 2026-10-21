@@ -241,7 +241,7 @@ export default function Home(){
                 <div>
                     <p className="home-footer-text"><b>Terms · Privacy</b></p>
                     <p className="home-footer-text">All assets are CC0 — free to use, no credit needed.</p>
-                    <p className="home-footer-text">Inny Kim · inny@fetchmesh.dev</p>
+                    <p className="home-footer-text">Made by Inny Kim</p>
                 </div>
                 <p className="home-footer-text">© 2026 fetchmesh</p>
             </footer>

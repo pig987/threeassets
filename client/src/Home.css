@@ -1,5 +1,6 @@
 body {
     margin: 0;
+    background-color: #003F56;
 }
 
 .home {
@@ -14,7 +15,7 @@ body {
 
 .home-footer {
     height: 250px;
-    border: 1px solid #ddd;
+    border: 0px solid #ddd;
     padding: 65px 181px 65px 181px;
     display: flex;
     justify-content: space-between;
