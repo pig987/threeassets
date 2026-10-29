@@ -54,6 +54,7 @@ export default function AssetPage(){
         <>
             <div style={{ position: 'relative' }}>
                 <div className="viewer" ref={ref}></div>
+                {/*
                 <div className='asset-preset-area'>
                     <div className='asset-preset' style={{ background: 'red'}}/>
                     <div className='asset-preset' style={{ background: 'orange'}}/>
@@ -61,6 +62,7 @@ export default function AssetPage(){
                     <div className='asset-preset' style={{ background: 'green'}}/>
                     <div className='asset-preset' style={{ background: 'blue'}}/>
                 </div>
+                */}
                 <div style={{ position: 'absolute', bottom: 20, left: '50%', width: '100px', transform: 'translateX(-50%)', display: 'flex',
                             justifyContent: 'center', border: '0px solid white', whiteSpace: 'pre', color: 'white',
                             fontSize: 20, fontWeight: 'bold', opacity: '80%', userSelect: 'none' }}>
@@ -75,10 +77,11 @@ export default function AssetPage(){
                 </div>
             </div>
             {asset && (
-                <div style={{ padding: 10 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'lightgrey' }}>
+                <div style={{ padding: 50, color: '#D6E2E8' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', /*background: 'lightgrey'*/ }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '25px' }}>
-                            <h2 style={{ margin: 0 }}>{asset.name}</h2>
+                            <h2 style={{ margin: 0, color: '#F3FF94' }}>{asset.name}</h2>
+                            {/*
                             <dl style={{ display: 'flex', gap: '25px', margin: 0 }}>
                                 <div style={{ display: 'flex', gap: '4px' }}>
                                     <dt>Liked</dt>
@@ -89,50 +92,54 @@ export default function AssetPage(){
                                     <dd style={{ margin: 0 }}>{asset.download_count}</dd>
                                 </div>
                             </dl>
+                            */}
                         </div>
-                        <div>
-                            <button>Like</button>
-                            <button onClick={() => handleDownload(assetId)}>Download</button>
+                        <div style={{ display: 'flex', gap: '16px' }}>
+                            {/*<button className='asset-btn'>Like</button>*/}
+                            <button className='asset-btn' onClick={() => handleDownload(assetId)}>Download</button>
                         </div>
                     </div>
-                    <div style={{ display: 'flex', gap: '25px', marginTop: 30 }}>
+                    <div style={{ display: 'flex', gap: '25px', margin: '30px 0' }}>
                         <dl style={{ display: 'flex', flexDirection: 'column', gap: 5, margin: 0 }}>
-                            <div style={{ display: 'flex', gap: '4px'}}>
+                            <div style={{ display: 'flex', gap: '10px'}}>
                                 <dt style={{ fontWeight: 'bold' }}>Triangles</dt>
                                 <dd style={{ margin: 0 }}>{asset.triangle_count}</dd>
                             </div>
-                            <div style={{ display: 'flex', gap: '4px'}}>
+                            <div style={{ display: 'flex', gap: '10px'}}>
                                 <dt style={{ fontWeight: 'bold' }}>File size</dt>
                                 <dd style={{ margin: 0 }}>{(asset.filesize/1024).toFixed(2)} KB</dd>
                             </div>
-                            <div style={{ display: 'flex', gap: '4px'}}>
+                            <div style={{ display: 'flex', gap: '10px'}}>
                                 <dt style={{ fontWeight: 'bold' }}>File type</dt>
                                 <dd style={{ margin: 0 }}>{asset.filetype}</dd>
                             </div>
-                            <div style={{ display: 'flex', gap: '4px'}}>
+                            <div style={{ display: 'flex', gap: '10px'}}>
                                 <dt style={{ fontWeight: 'bold' }}>Texture Res</dt>
                                 <dd style={{ margin: 0 }}>{asset.texture_res}x{asset.texture_res}</dd>
                             </div>
-                            <div style={{ display: 'flex', gap: '4px'}}>
+                            <div style={{ display: 'flex', gap: '10px'}}>
                                 <dt style={{ fontWeight: 'bold' }}>Material</dt>
                                 <dd style={{ margin: 0 }}>{asset.material_count}</dd>
                             </div>
-                            <div style={{ display: 'flex', gap: '4px'}}>
+                            <div style={{ display: 'flex', gap: '10px'}}>
                                 <dt style={{ fontWeight: 'bold' }}>Created Date</dt>
                                 <dd style={{ margin: 0 }}>{asset.created_at}</dd>
                             </div>
-                            <div style={{ display: 'flex', gap: '4px'}}>
+                            <div style={{ display: 'flex', gap: '10px'}}>
                                 <dt style={{ fontWeight: 'bold' }}>License</dt>
                                 <dd style={{ margin: 0 }}>CC0 — no credit needed</dd>
                             </div>
                         </dl>
                     </div>
-                    <div style={{ display: 'flex', marginTop: 10, background: 'lightgrey' }}>
-                        <span style={{ fontWeight: 'bold' }}>Category</span>
+                    <div style={{ display: 'flex', marginTop: 10, gap: '10px' /*background: 'lightgrey'*/ }}>
+                        <dt style={{ fontWeight: 'bold' }}>Category</dt>
+                        <dd style={{ margin: 0 }}>{asset.category_type}{' > '}{asset.category_name}</dd>
                     </div>
+                    {/*
                     <div style={{ display: 'flex', marginTop: 10, background: 'lightgrey' }}>
                         <span style={{ fontWeight: 'bold' }}>Tag</span>
                     </div>
+                    */}
                 </div>
             )}
         </>

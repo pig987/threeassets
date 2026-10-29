@@ -29,21 +29,21 @@ const handler = createMcpHandler(() => {
         description: "List all asset categories. Each category is either 'standalone' (single ready-to-use models) or 'modular' (kits of pieces that snap together). Call this first to find valid category names for search_assets.", 
     },
     async () => {
-        const result = await pool.query(`SELECT type, name FROM categories`)
+        const result = await pool.query(`SELECT type, name FROM categories`);
         const grouped = { standalone: [], modular: [] };
         for (const row of result.rows){
             grouped[row.type].push(row.name);
         }
         return {
-            content: [{  type: "text", text: JSON.stringify(grouped)} ]
+            content: [{ type: "text", text: JSON.stringify(grouped)} ]
         };
     });
     
     server.registerTool("search_assets", {
         description: "Search lightweight GLB 3D assets for three.js. Filter by any combination of keyword, category, and type (at least one is required). Returns a list of matching assets with id and name only.",
         inputSchema: z.object({
-            query: z.string().describe("Keyword matched against asset names (e.g. tree, robot)").optional(),
-            category: z.enum(["characters", "buildings", "props", "items", "nature", "vehicles", "fx", "terrain", "building_kits", "interiors"]).optional(),
+            query: z.string().describe("Keyword matched against asset names (e.g. cat, kid)").optional(),
+            category: z.enum(["characters", "props", "items", "nature", "terrain", "building_kits"]).optional(),
             type: z.enum(["standalone", "modular"]).describe("'standalone': single ready-to-use models. 'modular': pieces that snap together to build larger structures (walls, floors, terrain tiles).").optional()
         })
     },
@@ -102,6 +102,26 @@ const handler = createMcpHandler(() => {
         };
     });
 
+    server.registerTool("get_asset_url", {
+        description: "Get the download URL of a GLB asset by its id. Use an id returned by search_assets. The URL cannot be loaded directly from other websites (blocked by CORS), so download the file into the project and load it from there.", 
+        inputSchema: z.object({
+            id: z.number().int().describe("Asset id from search_assets results")
+        })
+    },
+    async ({id}) => {
+        const result = await pool.query(`SELECT glb_url FROM assets WHERE id = $1`, [id]);
+        if (result.rows.length === 0){
+            return {
+                content: [{ type: "text", text: "Asset not found. Use an id from search_assets." }],
+                isError: true
+            };
+        }
+        const url = process.env.ASSET_BASE_URL + result.rows[0].glb_url;
+        return {
+            content: [{  type: "text", text: url}]
+        };
+    });
+
     return server;
 });
 
@@ -151,7 +171,9 @@ app.get('/api/categories/:id', async (req, res) => {
 app.get('/api/assets/:id', async (req, res) => {
     try {
         const id = req.params.id;
-        const result = await pool.query(`SELECT * FROM assets WHERE id=$1`, [id]);
+        const result = await pool.query(`SELECT assets.*, categories.type AS category_type, categories.name AS category_name 
+                                        FROM assets JOIN categories ON assets.category_id = categories.id
+                                        WHERE assets.id=$1`, [id]);
         const asset = result.rows[0];
         if (!asset) return res.sendStatus(404);
         asset.glb_url = process.env.ASSET_BASE_URL + asset.glb_url;

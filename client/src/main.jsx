@@ -6,6 +6,7 @@ import App from './App.jsx'
 import AssetList from './AssetList.jsx'
 import AssetPage from './AssetPage.jsx'
 import Home from './Home.jsx'
+import McpDocs from './McpDocs.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -15,6 +16,7 @@ createRoot(document.getElementById('root')).render(
         <Route path='/categories/:type' element={<Home />} />
         <Route path='/categories/:type/:category' element={<Home />} />
         <Route path='/assets/:assetId' element={<AssetPage />} />
+        <Route path='/docs/mcp' element={<McpDocs />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,

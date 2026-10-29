@@ -24,3 +24,19 @@
 .asset-preset:hover {
     transform: scale(1.05);
 }
+
+.asset-btn {
+    font: inherit;
+    cursor: pointer;
+    background: #002C3C;
+    border: 2px solid #FF94C9;
+    border-radius: 4px;
+    color: #FF94C9;
+    padding: 8px 15px;
+    font-weight: bold;
+}
+
+.asset-btn:hover {
+    color: #002C3C;
+    background: #FF94C9;
+}

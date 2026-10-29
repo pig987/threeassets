@@ -15,9 +15,12 @@ CREATE TABLE assets (
     liked INTEGER NOT NULL DEFAULT 0,
     triangle_count INTEGER NOT NULL,
     filesize INTEGER NOT NULL,
-    texture_res INTEGER NOT NULL DEFAULT 1024,
+    texture_res INTEGER NOT NULL DEFAULT 256,
     material_count INTEGER NOT NULL DEFAULT 1,
     download_count INTEGER NOT NULL DEFAULT 0,
     filetype TEXT NOT NULL DEFAULT 'glb',
-    variant_count INTEGER NOT NULL DEFAULT 1
+    variant_count INTEGER NOT NULL DEFAULT 1,
+    size_x REAL NOT NULL,
+    size_y REAL NOT NULL,
+    size_z REAL NOT NULL
 );

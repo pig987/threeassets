@@ -1,17 +1,4 @@
 services:
-  server:
-    build: .
-    image: fetchmesh-server # 이미지 이름 정하기
-    env_file: .env
-    environment:
-      DB_HOST: db
-      DB_PORT: 5432
-    ports:
-      - "3000:3000" # 노트북 3000 요청(EC2에선 80)을 server컨테이너 3000으로
-    depends_on:
-      - db
-    restart: unless-stopped
-
   db:
     image: postgres:16
     environment:

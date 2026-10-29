@@ -17,17 +17,16 @@ export function initViewer(container, url){
     dirLight.position.set(3,5,2);
     scene.add(dirLight);
 
+
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.enablePan = false;
-    controls.minDistance = 2;
+    controls.minDistance = 0.1;
     controls.maxDistance = 10;
+    controls.zoomSpeed = 2.5;
     //controls.autoRotate = true;
 
     const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
-
-    camera.position.set(2,0,7);
-    camera.lookAt(0,0,0);
 
     let variants = [];
 
@@ -39,7 +38,18 @@ export function initViewer(container, url){
             const box = new THREE.Box3().setFromObject(model);
             const center = box.getCenter(new THREE.Vector3());
             model.position.sub(center);
-            scene.add(model);
+            
+            const size = box.getSize(new THREE.Vector3());
+            const maxSize = Math.max(size.x, size.y, size.z);
+            
+            const wrapper = new THREE.Group();
+            wrapper.add(model);
+            wrapper.scale.setScalar(1/maxSize);
+
+            camera.position.set(1, 1, 2.5);
+            camera.lookAt(0,0,0);
+
+            scene.add(wrapper);
             variants = [...model.children].sort((x,y) => x.name.localeCompare(y.name));
             showVariant(0);
         },

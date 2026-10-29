@@ -58,8 +58,15 @@ body {
 
 .home-docs {
     background-color: #002C3C;
-    margin-top: 10px;
+    margin-top: 0px; /*로그인 상단에 있을 때 10px*/
     padding: 13px 14px;
+}
+
+.home-mcp-brief {
+    background-color: #002C3C;
+    color: white;
+    margin-top: 10px;
+    padding: 30px 14px;
 }
 
 .home-hero {
@@ -75,6 +82,15 @@ body {
     color: #FF94C9;
     font-size: 24px;
     margin: 0;
+}
+
+.home-hero-text a {
+    color: white;
+    text-decoration: none;
+}
+
+.home-hero-text a:hover {
+    text-decoration: underline;
 }
 
 .home-footer-text {
@@ -186,7 +202,7 @@ body {
     bottom: 35px;
     left: 80px;
     width: 110px;
-    height: 50px;
+    height: 60px;
     display: flex;
     align-items: center;
     padding: 0;
@@ -197,8 +213,9 @@ body {
     color: #F3FF94;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
     overflow: hidden;
+    overflow-wrap: anywhere;
 }
 
 .home-assets-area {
