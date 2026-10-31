@@ -253,7 +253,7 @@ export default function Home(){
                         </nav>
                         <div className="home-mcp-brief">
                             <p style={{ fontSize: '18px', margin: 0, marginBottom: '20px' }}>Use with Claude</p>
-                            <ol style={{ fontSize: '14px', margin: 0, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                            <ol style={{ fontSize: '14px', margin: 0, overflowWrap: 'anywhere', paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
                                 <li>Copy the server URL<br />
                                 <code>https://fetchmesh.dev/mcp</code></li>
                                 <li>Claude → Settings → Connectors →<br />

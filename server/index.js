@@ -21,6 +21,7 @@ const limiter = rateLimit({
     limit: 100,
     standardHeaders: 'draft-7',
     legacyHeaders: false,
+    keyGenerator: (req) => req.headers['cf-connecting-ip'] || req.ip,
 });
 
 const handler = createMcpHandler(() => {
